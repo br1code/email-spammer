@@ -25,7 +25,7 @@ Para poder recibir estos datos, expondremos un endpoint (una ruta en nuestro web
 
 > Sujeto a cambios
 
-- listId (id de la lista de spam a la cual esta persona quiere suscribirse)
+- listSpamId (id de la lista de spam a la cual esta persona quiere suscribirse)
 - email 
 - first name (su primer nombre, será usado en el template del email para mostrar un mensaje personalizado)
 - last name (su primer nombre, será usado en el template del email para mostrar un mensaje personalizado)
@@ -50,14 +50,3 @@ un setInterval() y ya fue. Quizás que se ejecute cada varios minutos.
 > Heroku detiene nuestra instancia de app a los 5 min de no recibir requests? no me acuerdo.
 
 Para enviar emails, podemos usar la libreria https://nodemailer.com/about/
-
----
-
-Una persona también puede desuscribirse. En cada email enviado, debe haber un link que redireccione a una página web 
-con un botón para confirmar la "de-suscripción". 
-
-Una persona puede suscribirse a esta lista de spam con su email (en realidad esto pasaría cuando el usuario se registre en el sistema, pero como no tenemos ese sistema, vamos a abstraer este mismo y solo vamos a ser el servicio que se encarga del spam). Por lo tanto, vamos a recibir un email de x persona y lo vamos a suscribir a la lista de spam.
-
-Cada 30 minutos, vamos a enviar un correo spam random a todos los emails registrados.
-
-Una persona puede tocar un link en el email para desuscribirse. Este lo debería llevar a una página (Una interfaz super simple) en el que pueda tocar un botón para confirmar su desubscripción. Esto iria al backend y quitaría ese email de nuestra lista de spam
