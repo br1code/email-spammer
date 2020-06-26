@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New</title>
+</head>
+<body>
+    <h1>New List Spam</h1>
+
+    <form action="/new" method="POST">
+        <label for="interval">How often do you want to spam?</label>
+        <input type="number" name="interval" id="interval" min="1" max="5" required>
+        <br>
+
+        <label for="template">Email Template</label><br>
+        <textarea name="template" id="template" cols="150" rows="20" required></textarea><br>
+
+        <button>Create</button>
+    </form>
+</body>
+</html>

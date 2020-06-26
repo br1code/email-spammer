@@ -1,0 +1,27 @@
+{
+  "name": "email-spammer",
+  "version": "1.0.0",
+  "description": "Vamos a crear un servicio de email spam. Permitiremos que alguna entidad/plataforma/persona pueda crear una lista de email spam, la cual envíe un template pre-definido. Cualquier persona podrá suscribirse a esta lista de spam (esto último no sería un caso en la vida real, pero estamos simulando que alguien se creó una cuenta de usuario y esto al mismo tiempo haría que se suscriba a esta lista de spam).",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/br1code/email-spammer.git"
+  },
+  "author": "br1code",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/br1code/email-spammer/issues"
+  },
+  "homepage": "https://github.com/br1code/email-spammer#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.3",
+    "express": "^4.17.1",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.9.20"
+  }
+}

@@ -13,8 +13,8 @@ Con este id, las personas podrán subscribirse a esta lista de spam.
 
 Por lo tanto, el schema de una lista de spam ("spamList") se vería asi:
 
-- template: string
-- frecuencia: number
+- template: string (contenido del email)
+- interval: number (cada cuanto hacer spam)
 - subscribers: array de Subscriber (comienza vacío)
 
 En un ejemplo real, la suscripción a una lista de spam ocurriría luego de que un usuario se registre en alguna página/plataforma/app con su email. 

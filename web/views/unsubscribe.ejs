@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsubscribe</title>
+</head>
+
+<body>
+    <form method="POST" action="/unsubscribe/<%= listSpamId %>/<%= subscriberId %>?_method=DELETE">
+        <h2>Are you sure you want to unsubscribe the email <%= subscriberEmail %> from this email list?</h2>
+        <button type="submit">Unsubscribe</button>
+    </form>
+</body>
+
+</html>
