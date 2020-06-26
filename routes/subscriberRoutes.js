@@ -130,7 +130,7 @@ router.delete('/unsubscribe/:listSpamId/:subscriberId', (req, res) => {
             }
 
             console.log(`Subscriber with id: ${subscriberRemoved._id} removed from our system.`);
-            res.status(200).json({ ok: true });
+            res.render('unsubscribed');
         });
     });
 });
