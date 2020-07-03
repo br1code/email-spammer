@@ -1,45 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const Subscriber = require('../models/subscriber');
-const ListSpam = require('../models/listSpam');
+const SpamList = require('../models/spamList');
 
-// TEMPORARY ROUTE - TODO: REMOVE
-// Get a list of subscribers to a specific spam list
-router.get('/subscribers/:listSpamId', (req, res) => {
-    ListSpam.findById(req.params.listSpamId)
-        .populate('subscribers')
-        .exec((error, listSpam) => {
-            if (error || !listSpam) {
-                const errorMessage = `Something wrong happened while the List Spam was being searched or ` +
-                    `no list has been found with that id.\n$Error:{error.message}`;
-                console.log(errorMessage, error);
-                res.status(500).json({ error: errorMessage });
-                return;
-            }
+router.post('/subscribe/:spamListId', (req, res) => {
+    const spamListId = req.params.spamListId;
 
-            const subscribers = listSpam.subscribers.map(subscriber => {
-                return {
-                    id: subscriber._id,
-                    email: subscriber.email,
-                    fullName: `${subscriber.firstName} ${subscriber.lastName}`
-                };
-            });
-
-            res.json({
-                listSpamId: listSpam._id,
-                subscribers: subscribers
-            });
-        });
-});
-
-router.post('/subscribe/:listSpamId', (req, res) => {
-    // TODO: validate body and listspamid
-    ListSpam.findById(req.params.listSpamId, (error, listSpam) => {
-        if (error || !listSpam) {
-            const errorMessage = `Something wrong happened while the list was being searched or ` +
-                `no list has been found with that id.\nError: ${error.message}`;
+    SpamList.findById(spamListId, (error, spamList) => {
+        if (error) {
+            const errorMessage = `Something wrong happened while searching the Spam List.\nError: ${error.message}`
             console.log(errorMessage, error);
-            res.status(500).json({ error: errorMessage });
+            res.status(500).json({success: false, error: errorMessage});
+            return;
+        }
+
+        if (!spamList) {
+            console.log(`We couldn't find a Spam List with the given id: ${spamListId}`);
+            res.status(404).json({
+                success: false,
+                error: `We couldn't find a Spam List with the given id: ${spamListId}`
+            });
             return;
         }
 
@@ -51,85 +31,117 @@ router.post('/subscribe/:listSpamId', (req, res) => {
 
         Subscriber.create(newSubscriber, (error, subscriber) => {
             if (error) {
-                const errorMesage = `Something wrong happened while creating new Subscriber.\nError: ${error.message}`
-                console.log(errorMesage, error);
-                res.status(500).json({ error: errorMesage });
+                const errorMessage = `Something wrong happened while creating new Subscriber.\nError: ${error.message}`
+                console.log(errorMessage, error);
+                res.status(500).json({success: false, error: errorMessage});
                 return;
             }
 
-            listSpam.subscribers.push(subscriber);
-            listSpam.save();
+            spamList.subscribers.push(subscriber);
+            spamList.save();
 
-            console.log(`There is a new subscriber for the list spam ${listSpam._id}!`);
+            console.log(`There is a new subscriber for the Spam List with id ${spamListId}.`);
 
-            res.status(200).json({ ok: true });
+            res.status(201).json({success: true});
         });
     });
 });
 
-router.get('/unsubscribe/:listSpamId/:subscriberId', (req, res) => {
-    // TODO: valdate params
-    ListSpam.findById(req.params.listSpamId)
+router.get('/unsubscribe/:spamListId/:subscriberId', (req, res) => {
+    const spamListId = req.params.spamListId;
+    const subscriberId = req.params.subscriberId;
+
+    SpamList.findById(spamListId)
         .populate('subscribers')
-        .exec((error, listSpam) => {
-            if (error || !listSpam) {
-                const errorMessage = `Something wrong happened while the List Spam was being searched or ` +
-                    `no list has been found with that id.\nError:${error.message}`;
+        .exec((error, spamList) => {
+            if (error) {
+                const errorMessage = `Something wrong happened while searching the Spam List.\nError: ${error.message}`
                 console.log(errorMessage, error);
-                res.status(500).json({ error: errorMessage });
+                res.status(500).json({success: false, error: errorMessage});
                 return;
             }
 
-            const subscriber = listSpam.subscribers.find(subs => subs._id == req.params.subscriberId);
+            if (!spamList) {
+                const errorMessage = `We couldn't find a Spam List with the given id: ${spamListId}`;
+                console.log(errorMessage);
+                res.status(404).json({
+                    success: false,
+                    error: errorMessage
+                });
+                return;
+            }
+
+            const subscriber = spamList.subscribers.find(subs => subs._id.toString() === subscriberId);
 
             if (!subscriber) {
                 const errorMessage = 'The given person is not subscribed to this list';
                 console.log(errorMessage);
-                res.status(500).json({ error: errorMessage });
+                res.status(404).json({success: false, error: errorMessage});
                 return;
             }
 
             res.render('unsubscribe', {
-                listSpamId: req.params.listSpamId,
-                subscriberId: req.params.subscriberId,
+                spamListId: spamListId,
+                subscriberId: subscriberId,
                 subscriberEmail: subscriber.email
             });
         });
 });
 
-router.delete('/unsubscribe/:listSpamId/:subscriberId', (req, res) => {
-    ListSpam.findById(req.params.listSpamId, (error, listSpam) => {
-        if (error || !listSpam) {
-            const errorMessage = `Something wrong happened while the List Spam was being searched or ` +
-                `no list has been found with that id.\nError:${error.message}`;
+router.delete('/unsubscribe/:spamListId/:subscriberId', (req, res) => {
+    const spamListId = req.params.spamListId;
+    const subscriberId = req.params.subscriberId;
+    SpamList.findById(spamListId, (error, spamList) => {
+        if (error) {
+            const errorMessage = `Something wrong happened while searching the Spam List.\nError: ${error.message}`
             console.log(errorMessage, error);
-            res.status(500).json({ error: errorMessage });
+            res.status(500).json({success: false, error: errorMessage});
             return;
         }
 
-        const subscriberIndex = listSpam.subscribers.findIndex(subscriberId => subscriberId.toString() === req.params.subscriberId);
+        if (!spamList) {
+            const errorMessage = `We couldn't find a Spam List with the given id: ${spamListId}`;
+            console.log(errorMessage);
+            res.status(404).json({
+                success: false,
+                error: errorMessage
+            });
+            return;
+        }
+
+        const subscriberIndex = spamList.subscribers.findIndex(subscriberObjectId => subscriberObjectId.toString() === subscriberId);
 
         if (subscriberIndex === -1) {
             const errorMessage = 'The given person is not subscribed to this list';
             console.log(errorMessage);
-            res.status(500).json({ error: errorMessage });
+            res.status(404).json({success: false, error: errorMessage});
             return;
         }
 
-        listSpam.subscribers.splice(subscriberIndex, 1);
-        listSpam.save();
-        console.log(`Subscriber with id: ${req.params.subscriberId} removed from list ${listSpam._id}.`);
-
-        Subscriber.findByIdAndRemove(req.params.subscriberId, (error, subscriberRemoved) => {
-            if (error || !subscriberRemoved) {
-                const errorMessage = `Something wrong happened while removing subscriber with id: ${req.params.subscriberId}` +
-                    `or no subscriber has been found with that id.\nError:${error.message}`;
+        Subscriber.findByIdAndRemove(subscriberId, (error, subscriberRemoved) => {
+            if (error) {
+                const errorMessage = `Something wrong happened while searching the Spam List.\nError: ${error.message}`
                 console.log(errorMessage, error);
-                res.status(500).json({ error: errorMessage })
+                res.status(500).json({success: false, error: errorMessage});
                 return;
             }
 
-            console.log(`Subscriber with id: ${subscriberRemoved._id} removed from our system.`);
+            if (!subscriberRemoved) {
+                const errorMessage = `We couldn't find a Subscriber with the given id: ${spamListId}`;
+                console.log(errorMessage);
+                res.status(404).json({
+                    success: false,
+                    error: errorMessage
+                });
+                return;
+            }
+
+            console.log(`Subscriber with id: ${subscriberRemoved._id} was removed from our system.`);
+
+            spamList.subscribers.splice(subscriberIndex, 1);
+            spamList.save();
+            console.log(`Subscriber with id: ${subscriberRemoved._id} was removed from the Spam List with id ${spamList._id}.`);
+
             res.render('unsubscribed');
         });
     });

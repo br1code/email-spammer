@@ -4,7 +4,8 @@
   "description": "Vamos a crear un servicio de email spam. Permitiremos que alguna entidad/plataforma/persona pueda crear una lista de email spam, la cual envíe un template pre-definido. Cualquier persona podrá suscribirse a esta lista de spam (esto último no sería un caso en la vida real, pero estamos simulando que alguien se creó una cuenta de usuario y esto al mismo tiempo haría que se suscriba a esta lista de spam).",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -23,5 +24,8 @@
     "express": "^4.17.1",
     "method-override": "^3.0.0",
     "mongoose": "^5.9.20"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.6"
   }
 }

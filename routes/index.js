@@ -1,7 +1,7 @@
-const listSpamRoutes = require('./listSpamRoutes');
+const spamListRoutes = require('./spamListRoutes');
 const subscriberRoutes = require('./subscriberRoutes');
 
 module.exports = {
-    listSpam: listSpamRoutes,
+    spamList: spamListRoutes,
     subscriber: subscriberRoutes
 };
