@@ -8,6 +8,8 @@ const customMiddlewares = require('./middleware');
 const app = express();
 const port = process.env.PORT || 3000;
 
+require('dotenv').config();
+
 const customRoutes = require('./routes');
 
 mongoose.connect("mongodb://localhost/email-spammer", {

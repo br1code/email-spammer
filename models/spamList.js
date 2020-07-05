@@ -5,6 +5,10 @@ const spamListSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    subject: {
+        type: String,
+        required: true
+    },
     interval: {
         type: Number,
         default: 3

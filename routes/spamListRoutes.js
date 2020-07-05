@@ -11,6 +11,7 @@ router.post('/new', (req, res) => {
 
     const newSpamList = {
         template: req.body.template,
+        subject: req.body.subject,
         interval: req.body.interval
     };
 
